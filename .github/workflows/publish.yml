@@ -17,11 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  registry-url: "https://registry.npmjs.org"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Extract version from tag
         id: version
@@ -41,12 +41,12 @@ jobs:
       - name: Build package
         run: npm run build:widget
 
-            - name: Publish to npm
-              run: |
-                  cd packages/widget
-                  npm publish
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm
+        run: |
+          cd packages/widget
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-create-widget:
     if: startsWith(github.ref, 'refs/tags/create-widget@')
