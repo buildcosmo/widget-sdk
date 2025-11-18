@@ -68,7 +68,7 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/create-widget@}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Publishing @buildcosmo/create-widget@$VERSION"
+          echo "Publishing create-cosmo-widget@$VERSION"
 
       - name: Install dependencies
         run: npm ci

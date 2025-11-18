@@ -1,5 +1,5 @@
 {
-  "name": "@buildcosmo/create-widget",
+  "name": "create-cosmo-widget",
   "version": "0.1.0",
   "description": "Scaffold a Vite-based Cosmo widget project",
   "type": "module",

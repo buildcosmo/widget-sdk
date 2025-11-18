@@ -1,4 +1,4 @@
-# @buildcosmo/create-widget
+# create-cosmo-widget
 
 Scaffold a minimal Vite-based Cosmo widget project.
 
