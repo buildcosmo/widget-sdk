@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - "v*.*.*"
-      - "create-widget@*.*.*"
+      - "create-cosmo-widget@*.*.*"
 
 jobs:
   publish-widget:
@@ -49,7 +49,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-create-widget:
-    if: startsWith(github.ref, 'refs/tags/create-widget@')
+    if: startsWith(github.ref, 'refs/tags/create-cosmo-widget@')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -66,7 +66,7 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          VERSION=${GITHUB_REF#refs/tags/create-widget@}
+          VERSION=${GITHUB_REF#refs/tags/create-cosmo-widget@}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Publishing create-cosmo-widget@$VERSION"
 
