@@ -21,8 +21,5 @@
     "prepublishOnly": "npm run build"
   },
   "author": "Cosmo",
-  "license": "ISC",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  }
+  "license": "ISC"
 }
