@@ -1,0 +1,23 @@
+{
+  "name": "@buildcosmo/create-widget",
+  "version": "0.1.0",
+  "description": "Scaffold a Vite-based Cosmo widget project",
+  "type": "module",
+  "bin": {
+    "create-cosmo-widget": "bin/index.js"
+  },
+  "files": [
+    "bin",
+    "template"
+  ],
+  "keywords": [
+    "create",
+    "scaffold",
+    "vite",
+    "widget"
+  ],
+  "author": "Cosmo",
+  "publishConfig": {
+    "access": "public"
+  }
+}

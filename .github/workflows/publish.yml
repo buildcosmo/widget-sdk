@@ -1,0 +1,87 @@
+name: Publish Packages
+
+on:
+    push:
+        tags:
+            - "v*.*.*"
+            - "create-widget@*.*.*"
+
+jobs:
+    publish-widget:
+        if: startsWith(github.ref, 'refs/tags/v')
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  registry-url: "https://npm.pkg.github.com"
+                  scope: "@buildcosmo"
+
+            - name: Extract version from tag
+              id: version
+              run: |
+                  VERSION=${GITHUB_REF#refs/tags/v}
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Publishing @buildcosmo/widget@$VERSION"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Update package version
+              run: |
+                  cd packages/widget
+                  npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+
+            - name: Build package
+              run: npm run build:widget
+
+            - name: Publish to GitHub Packages
+              run: |
+                  cd packages/widget
+                  npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    publish-create-widget:
+        if: startsWith(github.ref, 'refs/tags/create-widget@')
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  registry-url: "https://registry.npmjs.org"
+
+            - name: Extract version from tag
+              id: version
+              run: |
+                  VERSION=${GITHUB_REF#refs/tags/create-widget@}
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Publishing @buildcosmo/create-widget@$VERSION"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Update package version
+              run: |
+                  cd packages/create-widget
+                  npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+
+            - name: Publish to npm
+              run: |
+                  cd packages/create-widget
+                  npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

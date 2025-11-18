@@ -1,0 +1,21 @@
+{
+  "name": "widget-sdk",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "build:widget": "npm run build --workspace=@buildcosmo/widget",
+    "watch:widget": "npm run watch --workspace=@buildcosmo/widget",
+    "clean": "npm run clean --workspaces --if-present && rm -rf node_modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buildcosmo/widget-sdk"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,40 @@
+# Root node modules
+node_modules/
+
+# Package-level modules
+packages/*/node_modules/
+
+# Build output
+dist/
+build/
+lib/
+packages/*/dist/
+packages/*/build/
+packages/*/lib/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+
+# Env files
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Cache
+.cache/
+.turbo/
+turbo/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Pack files
+*.tgz
