@@ -21,5 +21,8 @@
     "prepublishOnly": "npm run build"
   },
   "author": "Cosmo",
-  "license": "ISC"
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  }
 }
