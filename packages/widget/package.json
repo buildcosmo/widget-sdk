@@ -1,6 +1,6 @@
 {
   "name": "@buildcosmo/widget",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "TypeScript SDK for building native macOS widgets",
   "type": "module",
   "main": "dist/index.js",
@@ -26,6 +26,10 @@
   },
   "author": "Cosmo",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buildcosmo/widget-sdk"
+  },
   "publishConfig": {
     "access": "public"
   },
