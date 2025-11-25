@@ -1,4 +1,4 @@
-export * from './getSystemCpu';
-export * from './getSystemMemory';
-export * from './getSystemBattery';
+export * from './getSystemCpu.js';
+export * from './getSystemMemory.js';
+export * from './getSystemBattery.js';
 

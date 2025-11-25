@@ -1,4 +1,4 @@
-import { CosmoError } from '../errors/CosmoError';
+import { CosmoError } from '../errors/CosmoError.js';
 
 type PendingCallback = {
   resolve: (value: any) => void;

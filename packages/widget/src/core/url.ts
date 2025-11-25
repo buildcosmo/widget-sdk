@@ -1,4 +1,4 @@
-import { requestWithCallbackId } from './request';
+import { requestWithCallbackId } from './request.js';
 
 export function openUrl(url: string): void {
   (window as any).webkit.messageHandlers.openUrl.postMessage(url);

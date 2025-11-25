@@ -1,6 +1,6 @@
-export * from './getCalendars';
-export * from './getCalendarEvents';
-export * from './registerEventChangeObserver';
-export * from './types';
+export * from './getCalendars.js';
+export * from './getCalendarEvents.js';
+export * from './registerEventChangeObserver.js';
+export * from './types.js';
 
 

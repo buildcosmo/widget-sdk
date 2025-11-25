@@ -1,3 +1,3 @@
-export * from './CosmoError';
+export * from './CosmoError.js';
 
 

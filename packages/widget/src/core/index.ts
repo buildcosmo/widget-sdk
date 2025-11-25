@@ -1,8 +1,8 @@
-export * from './url';
-export * from './setWidgetData';
-export * from './getWidgetId';
-export * from './getUserId';
+export * from './url.js';
+export * from './setWidgetData.js';
+export * from './getWidgetId.js';
+export * from './getUserId.js';
 
 // Expose only the native-called callbacks; keep helpers internal
-export { swiftCallback } from './request';
-export { swiftObserverCallback } from './observers';
+export { swiftCallback } from './request.js';
+export { swiftObserverCallback } from './observers.js';
