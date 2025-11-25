@@ -13,8 +13,7 @@ permissions:
   id-token: write
 
 jobs:
-  publish-widget:
-    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '@')
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,63 +31,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build package
-        run: npm run build:widget
-
-      - name: Publish to npm
+      - name: Publish package
         run: |
-          cd packages/widget
-          npm publish --provenance
-
-  publish-create-widget:
-    if: startsWith(github.ref, 'refs/tags/create-cosmo-widget@')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Install latest npm
-        run: npm install -g npm@latest
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Publish to npm
-        run: |
-          cd packages/create-cosmo-widget
-          npm publish --provenance
-
-  publish-vite-plugin:
-    if: startsWith(github.ref, 'refs/tags/vite-plugin@')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Install latest npm
-        run: npm install -g npm@latest
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build package
-        run: |
-          cd packages/vite-plugin
-          npm run build
-
-      - name: Publish to npm
-        run: |
-          cd packages/vite-plugin
-          npm publish --provenance
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" == v* && "$TAG" != *@* ]]; then
+            echo "Publishing @buildcosmo/widget..."
+            npm run build:widget
+            cd packages/widget && npm publish --provenance
+          elif [[ "$TAG" == create-cosmo-widget@* ]]; then
+            echo "Publishing create-cosmo-widget..."
+            cd packages/create-cosmo-widget && npm publish --provenance
+          elif [[ "$TAG" == vite-plugin@* ]]; then
+            echo "Publishing @buildcosmo/vite-plugin..."
+            cd packages/vite-plugin && npm run build && npm publish --provenance
+          else
+            echo "Unknown tag pattern: $TAG"
+            exit 1
+          fi
