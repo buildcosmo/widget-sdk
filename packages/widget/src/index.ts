@@ -1,5 +1,6 @@
-export * from './core';
-export * as eventManager from './eventManager';
-export * as systemResources from './systemResources';
-export * as systemSettings from './systemSettings';
-export * as errors from './errors';
+export * from './core/index.js';
+export * as eventManager from './eventManager/index.js';
+export * from './systemResources/index.js';
+export * from './window/index.js';
+export * as systemSettings from './systemSettings/index.js';
+export * as errors from './errors/index.js';

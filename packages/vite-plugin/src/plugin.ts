@@ -1,0 +1,228 @@
+import type { Plugin, ViteDevServer, PreviewServer } from 'vite';
+import { spawnSync } from 'child_process';
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+export interface CosmoPluginOptions {
+  /**
+   * If true, the plugin will not attempt to notify the Cosmo app
+   * that the dev server is running.
+   * @default false
+   */
+  serverOnly?: boolean;
+
+  /**
+   * The path to the widget project root.
+   * Defaults to the Vite root.
+   */
+  widgetPath?: string;
+}
+
+function validateWidgetConfig(cfg: any): string[] {
+  const errors: string[] = [];
+  const expectType = (key: string, type: string) => {
+    if (!(key in cfg)) errors.push(`${key} is required`);
+    else if (typeof cfg[key] !== type) errors.push(`${key} must be ${type}`);
+  };
+
+  expectType('cosmoWidgetConfigVersion', 'string');
+  expectType('defaultWidth', 'number');
+  expectType('defaultHeight', 'number');
+  expectType('minWidth', 'number');
+  expectType('minHeight', 'number');
+  expectType('allowResize', 'boolean');
+  expectType('keepAspectRatio', 'boolean');
+  expectType('allowLockScreen', 'boolean');
+
+  // Basic constraints
+  if (typeof cfg.defaultWidth === 'number' && cfg.defaultWidth <= 0) errors.push('defaultWidth must be > 0');
+  if (typeof cfg.defaultHeight === 'number' && cfg.defaultHeight <= 0) errors.push('defaultHeight must be > 0');
+  if (typeof cfg.minWidth === 'number' && typeof cfg.defaultWidth === 'number' && cfg.minWidth > cfg.defaultWidth) errors.push('minWidth must be <= defaultWidth');
+  if (typeof cfg.minHeight === 'number' && typeof cfg.defaultHeight === 'number' && cfg.minHeight > cfg.defaultHeight) errors.push('minHeight must be <= defaultHeight');
+
+  if ('defaultPos' in cfg) {
+    if (!Array.isArray(cfg.defaultPos) || cfg.defaultPos.length !== 2) {
+      errors.push('defaultPos must be an array of 2 numbers');
+    } else {
+      const [x, y] = cfg.defaultPos;
+      if (typeof x !== 'number' || typeof y !== 'number') {
+        errors.push('defaultPos must contain numbers');
+      } else if (x < 0 || x > 1 || y < 0 || y > 1) {
+        errors.push('defaultPos coordinates must be between 0 and 1');
+      }
+    }
+  }
+
+  if ('backgroundBlurRadius' in cfg) {
+    if (typeof cfg.backgroundBlurRadius !== 'number') {
+      errors.push('backgroundBlurRadius must be a number');
+    } else if (cfg.backgroundBlurRadius < 0) {
+      errors.push('backgroundBlurRadius must be >= 0');
+    }
+  }
+
+  return errors;
+}
+
+function validatePreferencesTemplate(prefs: any): string[] {
+  const errors: string[] = [];
+  
+  for (const [key, pref] of Object.entries(prefs)) {
+    if (typeof pref !== 'object' || pref === null) {
+      errors.push(`${key}: must be an object`);
+      continue;
+    }
+    
+    const p = pref as any;
+    
+    // Validate backgroundBlurRadii
+    if ('backgroundBlurRadii' in p) {
+      if (!Array.isArray(p.backgroundBlurRadii)) {
+        errors.push(`${key}.backgroundBlurRadii: must be an array of numbers`);
+      } else {
+        if (p.backgroundBlurRadii.some((n: any) => typeof n !== 'number' || n < 0)) {
+          errors.push(`${key}.backgroundBlurRadii: must contain non-negative numbers`);
+        }
+        
+        // Check length matches options if options exist
+        if (Array.isArray(p.options) && p.options.length !== p.backgroundBlurRadii.length) {
+          errors.push(`${key}: backgroundBlurRadii length (${p.backgroundBlurRadii.length}) must match options length (${p.options.length})`);
+        }
+      }
+    }
+  }
+  
+  return errors;
+}
+
+export function cosmo(options: CosmoPluginOptions = {}): Plugin {
+  let outDir = 'dist';
+  let rootDir = process.cwd();
+
+  return {
+    name: 'vite-plugin-cosmo',
+    enforce: 'post', // Ensure we run after other plugins
+    configResolved(config) {
+      outDir = config.build.outDir;
+      rootDir = config.root;
+    },
+    buildStart() {
+      // Validate widget.config.json before build output
+      const cfgPath = resolve(rootDir, 'widget.config.json');
+      if (!existsSync(cfgPath)) {
+        this.error('widget.config.json not found at project root.');
+        return;
+      }
+      let cfg;
+      try {
+        cfg = JSON.parse(readFileSync(cfgPath, 'utf-8'));
+      } catch (e: any) {
+        this.error(`widget.config.json is not valid JSON: ${e.message}`);
+        return;
+      }
+      const errors = validateWidgetConfig(cfg);
+      if (errors.length) {
+        this.error(`widget.config.json validation failed:\n- ${errors.join('\n- ')}`);
+      }
+
+      // Validate widget.preferences-template.json
+      const prefsPath = resolve(rootDir, 'widget.preferences-template.json');
+      if (existsSync(prefsPath)) {
+        let prefs;
+        try {
+          prefs = JSON.parse(readFileSync(prefsPath, 'utf-8'));
+        } catch (e: any) {
+          this.error(`widget.preferences-template.json is not valid JSON: ${e.message}`);
+          return;
+        }
+        const prefErrors = validatePreferencesTemplate(prefs);
+        if (prefErrors.length) {
+          this.error(`widget.preferences-template.json validation failed:\n- ${prefErrors.join('\n- ')}`);
+        }
+      }
+    },
+    writeBundle() {
+      const targets = [
+        'widget.config.json',
+        'widget.preferences-template.json',
+      ];
+      const outPath = resolve(rootDir, outDir);
+      
+      // Ensure output directory exists
+      if (!existsSync(outPath)) {
+          mkdirSync(outPath, { recursive: true });
+      }
+      
+      for (const file of targets) {
+        const src = resolve(rootDir, file);
+        const dest = resolve(outPath, file);
+        if (existsSync(src)) {
+          copyFileSync(src, dest);
+          console.log(`[vite-plugin-cosmo] Copied ${file} to ${outDir}`);
+        } else if (file === 'widget.config.json') {
+          console.warn(`[vite-plugin-cosmo] Warning: ${file} not found at ${src}`);
+        }
+      }
+    },
+    configureServer(server: ViteDevServer) {
+      server.httpServer?.once('listening', () => {
+        if (!options.serverOnly) {
+          const widgetPath = options.widgetPath || server.config.root;
+          const devServerUrl = getDevServerUrl(server);
+          notifyCosmo(widgetPath, devServerUrl);
+        }
+      });
+    },
+    configurePreviewServer(server: PreviewServer) {
+      server.httpServer?.once('listening', () => {
+        if (!options.serverOnly) {
+          const widgetPath = options.widgetPath || server.config.root;
+          const devServerUrl = getDevServerUrl(server);
+          notifyCosmo(widgetPath, devServerUrl);
+        }
+      });
+    }
+  };
+}
+
+function getDevServerUrl(server: ViteDevServer | PreviewServer): string {
+  const address = server.httpServer?.address();
+  const isHttps = !!server.config.server.https;
+  const protocol = isHttps ? 'https' : 'http';
+
+  if (address && typeof address !== 'string') {
+    const port = address.port;
+    // Use resolvedUrls if available (Vite 2.9.0+)
+    if (server.resolvedUrls?.local?.[0]) {
+       return server.resolvedUrls.local[0];
+    }
+    return `${protocol}://localhost:${port}`;
+  }
+  return '';
+}
+
+function notifyCosmo(widgetPath: string, devServerUrl: string) {
+  console.log('Creating a dev widget on the desktop. Ensure Cosmo is running and Developer Mode is enabled.');
+  
+  const params = new URLSearchParams({
+    path: widgetPath,
+    server: devServerUrl,
+  });
+  const cosmoUrl = `cosmo://devmode?${params.toString()}`;
+  
+  const script = `
+    tell application "Cosmo"
+      activate
+      open location "${cosmoUrl}"
+    end tell
+  `;
+  
+  try {
+    const result = spawnSync('osascript', ['-e', script], { stdio: 'inherit' });
+    if (result.status !== 0) {
+      console.warn('Failed to run widget in dev mode. Make sure Cosmo is running and Developer Mode is enabled.');
+    }
+  } catch (e) {
+    console.error('Failed to notify Cosmo:', e);
+  }
+}

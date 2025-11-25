@@ -1,7 +1,7 @@
 {
-  "name": "@buildcosmo/widget",
-  "version": "0.1.1",
-  "description": "TypeScript SDK for building native macOS widgets",
+  "name": "@buildcosmo/vite-plugin",
+  "version": "0.1.0",
+  "description": "Vite plugin for Cosmo widget development",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -12,12 +12,8 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "bin": {
-    "cosmo": "./bin/cosmo.js"
-  },
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "scripts": {
     "build": "tsc",
@@ -29,12 +25,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "archiver": "^7.0.1",
-    "axios": "^1.13.2",
-    "commander": "^14.0.2"
+  "peerDependencies": {
+    "vite": "^5.0.0 || ^6.0.0 || ^7.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0",
+    "vite": "^7.0.0"
   }
 }
