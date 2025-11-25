@@ -17,6 +17,10 @@
     "widget"
   ],
   "author": "Cosmo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buildcosmo/widget-sdk"
+  },
   "publishConfig": {
     "access": "public"
   }
