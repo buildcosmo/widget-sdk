@@ -9,7 +9,7 @@ on:
 
 jobs:
   publish-widget:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') && !startsWith(github.ref, 'refs/tags/vite-plugin')
     runs-on: ubuntu-latest
     permissions:
       contents: read
