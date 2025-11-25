@@ -14,7 +14,7 @@
     "vite": "^7.0.0"
   },
   "dependencies": {
-    "@buildcosmo/widget": "^0.1.0",
-    "@buildcosmo/vite-plugin": "^0.1.0"
+    "@buildcosmo/widget": "latest",
+    "@buildcosmo/vite-plugin": "latest"
   }
 }
