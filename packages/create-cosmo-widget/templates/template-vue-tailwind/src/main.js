@@ -1,0 +1,18 @@
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+
+window.widget = (config, root) => {
+    const app = createApp(App, {
+        preferences: config.styles || {}
+    })
+
+    // If root is a string selector, find the element
+    const rootElement = typeof root === 'string' ? document.querySelector(root) : root
+
+    if (rootElement) {
+        app.mount(rootElement)
+    } else {
+        console.error('Widget root element not found')
+    }
+}

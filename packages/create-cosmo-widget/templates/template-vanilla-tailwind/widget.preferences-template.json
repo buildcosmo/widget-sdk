@@ -1,0 +1,16 @@
+{
+  "theme": {
+    "label": "Theme",
+    "value": "Default",
+    "order": 1,
+    "controlType": "select",
+    "options": ["Default"]
+  },
+  "hideBackground": {
+    "label": "Hide Background",
+    "value": false,
+    "order": 2,
+    "controlType": "toggle"
+  }
+}
+

@@ -1,0 +1,12 @@
+{
+  "cosmoWidgetConfigVersion": "2.0.0",
+  "version": "1.1.1",
+  "defaultWidth": 300,
+  "defaultHeight": 300,
+  "minWidth": 200,
+  "minHeight": 200,
+  "allowResize": true,
+  "keepAspectRatio": false,
+  "allowLockScreen": true,
+  "requireSignedIn": false
+}
