@@ -28,7 +28,7 @@ export interface WindowPosition {
 export interface WindowPositionProportional {
   /** X position as a proportion (0-1) relative to the main screen width. 0 = left edge, 1 = right edge. */
   x: number;
-  /** Y position as a proportion (0-1) relative to the main screen height. 0 = top edge, 1 = bottom edge. */
+  /** Y position as a proportion (0-1) relative to the main screen height. 0 = bottom edge, 1 = top edge. */
   y: number;
   /** When true, x and y are treated as proportions (0-1) and reference the center of the window. */
   proportional: true;
@@ -56,7 +56,7 @@ export function setWindowSize(size: WindowSize): void {
 
 /**
  * Gets the current position of the widget window.
- * @returns A promise that resolves to the window position.
+ * @returns A promise that resolves to the window position (bottom-left corner).
  */
 export async function getWindowPosition(): Promise<WindowPosition> {
   return requestWithCallbackId("getWindowPosition");
@@ -66,9 +66,9 @@ export async function getWindowPosition(): Promise<WindowPosition> {
  * Sets the position of the widget window.
  * 
  * Can be called in two ways:
- * 1. With exact coordinates: `{ x, y }` - positions the window's top-left corner at the given screen coordinates.
+ * 1. With exact coordinates: `{ x, y }` - positions the window's bottom-left corner at the given screen coordinates.
  * 2. With proportional coordinates: `{ x, y, proportional: true }` - x and y are 0-1 values relative to the main screen,
- *    where (0, 0) is the top-left and (1, 1) is the bottom-right. The position references the **center** of the window.
+ *    where (0, 0) is the bottom-left and (1, 1) is the top-right. The position references the **center** of the window.
  * 
  * @param position The new position for the window.
  */
