@@ -1,21 +1,11 @@
 import './style.css'
 
-interface WidgetPreferences {
-  defaultWidth: number;
-  defaultHeight: number;
-  minWidth: number;
-  minHeight: number;
-  allowResize: boolean;
-  keepAspectRatio: boolean;
-  styles: Record<string, unknown>;
-}
-
-export default function widget(preferences: WidgetPreferences, widgetData: string): void {
+export default function widget(preferences: Record<string, any>, widgetData: Record<string, any>): void {
   const root = ensureRoot();
   root.innerHTML = '';
 
   // Handle hideBackground preference
-  if ((preferences as any)?.hideBackground) {
+  if (preferences?.hideBackground) {
     root.classList.add('hide-background');
   } else {
     root.classList.remove('hide-background');
