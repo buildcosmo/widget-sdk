@@ -13,6 +13,6 @@ if (import.meta.env.DEV && !window.webkit) {
     widget({
         "theme": "Default",
         "hideBackground": false
-    }, {});
+    }, "");
 }
 

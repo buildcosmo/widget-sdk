@@ -38,5 +38,5 @@ if (import.meta.env.DEV && !(window as any).webkit) {
   widget({
     "theme": "Default",
     "hideBackground": false
-  }, {});
+  }, "");
 }

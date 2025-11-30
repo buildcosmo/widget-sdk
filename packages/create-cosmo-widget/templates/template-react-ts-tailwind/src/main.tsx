@@ -10,13 +10,13 @@ const preferences: Record<string, any> = {
   "hideBackground": false
 };
 
-const widgetData: Record<string, any> = {};
+const widgetData: string | Record<string, any> = "";
 
 import { Root } from 'react-dom/client';
 
 let root: Root | null = null;
 
-function widget(prefs: Record<string, any>, data: Record<string, any>): void {
+function widget(prefs: Record<string, any>, data: string | Record<string, any>): void {
   const container = document.getElementById('widget-root') || createRootElement();
   
   if (!root) {
@@ -41,7 +41,7 @@ window.widget = widget;
 
 declare global {
   interface Window {
-    widget: (prefs: Record<string, any>, data: Record<string, any>) => void;
+    widget: (prefs: Record<string, any>, data: string | Record<string, any>) => void;
   }
 }
 

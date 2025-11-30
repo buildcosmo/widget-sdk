@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 interface WidgetProps {
   preferences: Record<string, any>;
-  widgetData: Record<string, any>;
+  widgetData: string | Record<string, any>;
 }
 
 export default function Widget({ preferences, widgetData }: WidgetProps) {

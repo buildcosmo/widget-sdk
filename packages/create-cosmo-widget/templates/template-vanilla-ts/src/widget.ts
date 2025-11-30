@@ -3,7 +3,7 @@ import './style.css'
 
 
 
-export default function widget(preferences: Record<string, any>, widgetData: Record<string, any>): void {
+export default function widget(preferences: Record<string, any>, widgetData: string | Record<string, any>): void {
   const root = ensureRoot();
   root.innerHTML = '';
 
