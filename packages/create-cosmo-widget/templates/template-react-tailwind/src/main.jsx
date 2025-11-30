@@ -4,16 +4,11 @@ import App from './App.jsx'
 import './style.css'
 
 const preferences = {
-  "defaultWidth": 300,
-  "defaultHeight": 300,
-  "minWidth": 200,
-  "minHeight": 200,
-  "allowResize": true,
-  "keepAspectRatio": false,
-  "styles": {}
+  "theme": "Default",
+  "hideBackground": false
 };
 
-const widgetData = "";
+const widgetData = {};
 
 let root = null;
 
