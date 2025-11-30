@@ -15,6 +15,12 @@ import { Root } from 'react-dom/client';
 
 let root: Root | null = null;
 
+declare global {
+  interface Window {
+    widget: (prefs: Record<string, any>, data: Record<string, any>) => void;
+  }
+}
+
 function widget(prefs: Record<string, any>, data: Record<string, any>): void {
   const container = document.getElementById('widget-root') || createRootElement();
   
@@ -36,13 +42,8 @@ function createRootElement(): HTMLElement {
   return el;
 }
 
+// Assign to window immediately to ensure it's available when native app calls it
 window.widget = widget;
-
-declare global {
-  interface Window {
-    widget: (prefs: Record<string, any>, data: Record<string, any>) => void;
-  }
-}
 
 if (import.meta.env.DEV && !window.webkit) {
   widget(preferences, widgetData);

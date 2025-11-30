@@ -4,6 +4,12 @@ import Widget from './Widget.vue'
 
 let appInstance: VueApp | null = null;
 
+declare global {
+  interface Window {
+    widget: (preferences: Record<string, any>, widgetData: string | Record<string, any>) => void;
+  }
+}
+
 function widget(preferences: Record<string, any>, widgetData: string | Record<string, any>): void {
   const container = document.getElementById('widget-root') || createRootElement();
   
@@ -26,13 +32,8 @@ function createRootElement(): HTMLElement {
   return el;
 }
 
+// Assign to window immediately to ensure it's available when native app calls it
 window.widget = widget;
-
-declare global {
-  interface Window {
-    widget: (preferences: Record<string, any>, widgetData: string | Record<string, any>) => void;
-  }
-}
 
 if (import.meta.env.DEV && !(window as any).webkit) {
   widget({
