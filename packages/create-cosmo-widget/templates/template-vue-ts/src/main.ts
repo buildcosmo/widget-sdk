@@ -12,7 +12,8 @@ function widget(preferences: Record<string, any>, widgetData: string | Record<st
   }
   
   appInstance = createApp(Widget, {
-    preferences: preferences || {}
+    preferences: preferences || {},
+    widgetData: widgetData || null
   });
   
   appInstance.mount(container);

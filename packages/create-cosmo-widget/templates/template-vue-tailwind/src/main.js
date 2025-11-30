@@ -12,7 +12,8 @@ function widget(preferences, widgetData) {
     }
 
     appInstance = createApp(App, {
-        preferences: preferences || {}
+        preferences: preferences || {},
+        widgetData: widgetData || null
     });
 
     appInstance.mount(container);
