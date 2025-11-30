@@ -4,21 +4,7 @@ import Widget from './Widget.vue'
 
 let appInstance: VueApp | null = null;
 
-declare global {
-  interface Window {
-    widget: (preferences: Record<string, any>, widgetData: string | Record<string, any>) => void;
-  }
-}
-
-function createRootElement(): HTMLElement {
-  const el = document.createElement('div');
-  el.id = 'widget-root';
-  document.body.appendChild(el);
-  return el;
-}
-
-// Assign to window immediately as function expression to ensure it's available synchronously
-window.widget = function widget(preferences: Record<string, any>, widgetData: string | Record<string, any>): void {
+function widget(preferences: Record<string, any>, widgetData: string | Record<string, any>): void {
   const container = document.getElementById('widget-root') || createRootElement();
   
   if (appInstance) {
@@ -31,7 +17,22 @@ window.widget = function widget(preferences: Record<string, any>, widgetData: st
   });
   
   appInstance.mount(container);
-};
+}
+
+function createRootElement(): HTMLElement {
+  const el = document.createElement('div');
+  el.id = 'widget-root';
+  document.body.appendChild(el);
+  return el;
+}
+
+window.widget = widget;
+
+declare global {
+  interface Window {
+    widget: (preferences: Record<string, any>, widgetData: string | Record<string, any>) => void;
+  }
+}
 
 if (import.meta.env.DEV && !(window as any).webkit) {
   widget({
