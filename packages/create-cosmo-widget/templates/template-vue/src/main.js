@@ -2,23 +2,33 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 
-window.widget = (config, root) => {
-    const app = createApp(App, {
-        preferences: config.styles || {}
-    })
+let appInstance = null;
 
-    // If root is a string selector, find the element
-    const rootElement = typeof root === 'string' ? document.querySelector(root) : root
-
-    if (rootElement) {
-        app.mount(rootElement)
-    } else {
-        console.error('Widget root element not found')
+function widget(preferences, widgetData) {
+    const container = document.getElementById('widget-root') || createRootElement();
+    
+    if (appInstance) {
+        appInstance.unmount();
     }
+    
+    appInstance = createApp(App, {
+        preferences: preferences || {}
+    });
+    
+    appInstance.mount(container);
 }
 
+function createRootElement() {
+    const el = document.createElement('div');
+    el.id = 'widget-root';
+    document.body.appendChild(el);
+    return el;
+}
+
+window.widget = widget;
+
 if (import.meta.env.DEV && !window.webkit) {
-    window.widget({
+    widget({
         "defaultWidth": 300,
         "defaultHeight": 300,
         "minWidth": 200,
@@ -26,5 +36,5 @@ if (import.meta.env.DEV && !window.webkit) {
         "allowResize": true,
         "keepAspectRatio": false,
         "styles": {}
-    }, "#widget-root");
+    }, "");
 }
