@@ -25,7 +25,7 @@ function validateWidgetConfig(cfg: any): string[] {
     else if (typeof cfg[key] !== type) errors.push(`${key} must be ${type}`);
   };
 
-  expectType('cosmoWidgetConfigVersion', 'string');
+  expectType('minCosmoVersion', 'string');
   expectType('defaultWidth', 'number');
   expectType('defaultHeight', 'number');
   expectType('minWidth', 'number');
@@ -33,6 +33,7 @@ function validateWidgetConfig(cfg: any): string[] {
   expectType('allowResize', 'boolean');
   expectType('keepAspectRatio', 'boolean');
   expectType('allowLockScreen', 'boolean');
+  expectType('allowInternet', 'boolean');
 
   // Basic constraints
   if (typeof cfg.defaultWidth === 'number' && cfg.defaultWidth <= 0) errors.push('defaultWidth must be > 0');

@@ -16,3 +16,15 @@ window.widget = (config, root) => {
         console.error('Widget root element not found')
     }
 }
+
+if (import.meta.env.DEV && !window.webkit) {
+    window.widget({
+        "defaultWidth": 300,
+        "defaultHeight": 300,
+        "minWidth": 200,
+        "minHeight": 200,
+        "allowResize": true,
+        "keepAspectRatio": false,
+        "styles": {}
+    }, "#widget-root");
+}

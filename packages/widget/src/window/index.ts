@@ -64,15 +64,17 @@ export async function getWindowPosition(): Promise<WindowPosition> {
 
 /**
  * Sets the position of the widget window.
- * 
+ *
  * Can be called in two ways:
  * 1. With exact coordinates: `{ x, y }` - positions the window's bottom-left corner at the given screen coordinates.
  * 2. With proportional coordinates: `{ x, y, proportional: true }` - x and y are 0-1 values relative to the main screen,
  *    where (0, 0) is the bottom-left and (1, 1) is the top-right. The position references the **center** of the window.
- * 
+ *
  * @param position The new position for the window.
  */
-export function setWindowPosition(position: WindowPosition | WindowPositionProportional): void {
+export function setWindowPosition(
+  position: WindowPosition | WindowPositionProportional
+): void {
   if (window.webkit?.messageHandlers?.setWindowPosition) {
     window.webkit.messageHandlers.setWindowPosition.postMessage(position);
   } else {

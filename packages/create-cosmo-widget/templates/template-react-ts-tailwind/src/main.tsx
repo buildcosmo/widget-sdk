@@ -43,4 +43,7 @@ declare global {
 }
 
 window.widget = widget;
-widget(preferences, widgetData);
+
+if (import.meta.env.DEV && !window.webkit) {
+  widget(preferences, widgetData);
+}

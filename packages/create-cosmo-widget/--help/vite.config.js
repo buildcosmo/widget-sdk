@@ -29,6 +29,22 @@ function copyWidgetMeta() {
       if (errors.length) {
         this.error(`widget.config.json validation failed:\n- ${errors.join('\n- ')}`);
       }
+
+      // Validate widget.preferences-template.json
+      const prefsPath = resolve(rootDir, 'widget.preferences-template.json');
+      if (existsSync(prefsPath)) {
+        let prefs;
+        try {
+          prefs = JSON.parse(readFileSync(prefsPath, 'utf-8'));
+        } catch (e) {
+          this.error(`widget.preferences-template.json is not valid JSON: ${e.message}`);
+          return;
+        }
+        const prefErrors = validatePreferencesTemplate(prefs);
+        if (prefErrors.length) {
+          this.error(`widget.preferences-template.json validation failed:\n- ${prefErrors.join('\n- ')}`);
+        }
+      }
     },
     closeBundle() {
       const targets = [
@@ -55,7 +71,7 @@ function validateWidgetConfig(cfg) {
     else if (typeof cfg[key] !== type) errors.push(`${key} must be ${type}`);
   };
 
-  expectType('cosmoWidgetConfigVersion', 'string');
+  expectType('minCosmoVersion', 'string');
   expectType('defaultWidth', 'number');
   expectType('defaultHeight', 'number');
   expectType('minWidth', 'number');
@@ -63,7 +79,7 @@ function validateWidgetConfig(cfg) {
   expectType('allowResize', 'boolean');
   expectType('keepAspectRatio', 'boolean');
   expectType('allowLockScreen', 'boolean');
-  expectType('requireSignedIn', 'boolean');
+  expectType('allowInternet', 'boolean');
 
   // Basic constraints
   if (typeof cfg.defaultWidth === 'number' && cfg.defaultWidth <= 0) errors.push('defaultWidth must be > 0');
@@ -71,6 +87,58 @@ function validateWidgetConfig(cfg) {
   if (typeof cfg.minWidth === 'number' && typeof cfg.defaultWidth === 'number' && cfg.minWidth > cfg.defaultWidth) errors.push('minWidth must be <= defaultWidth');
   if (typeof cfg.minHeight === 'number' && typeof cfg.defaultHeight === 'number' && cfg.minHeight > cfg.defaultHeight) errors.push('minHeight must be <= defaultHeight');
 
+  if ('defaultPos' in cfg) {
+    if (!Array.isArray(cfg.defaultPos) || cfg.defaultPos.length !== 2) {
+      errors.push('defaultPos must be an array of 2 numbers');
+    } else {
+      const [x, y] = cfg.defaultPos;
+      if (typeof x !== 'number' || typeof y !== 'number') {
+        errors.push('defaultPos must contain numbers');
+      } else if (x < 0 || x > 1 || y < 0 || y > 1) {
+        errors.push('defaultPos coordinates must be between 0 and 1');
+      }
+    }
+  }
+
+  if ('backgroundBlurRadius' in cfg) {
+    if (typeof cfg.backgroundBlurRadius !== 'number') {
+      errors.push('backgroundBlurRadius must be a number');
+    } else if (cfg.backgroundBlurRadius < 0) {
+      errors.push('backgroundBlurRadius must be >= 0');
+    }
+  }
+
+  return errors;
+}
+
+function validatePreferencesTemplate(prefs) {
+  const errors = [];
+  
+  for (const [key, pref] of Object.entries(prefs)) {
+    if (typeof pref !== 'object' || pref === null) {
+      errors.push(`${key}: must be an object`);
+      continue;
+    }
+    
+    const p = pref;
+    
+    // Validate backgroundBlurRadii
+    if ('backgroundBlurRadii' in p) {
+      if (!Array.isArray(p.backgroundBlurRadii)) {
+        errors.push(`${key}.backgroundBlurRadii: must be an array of numbers`);
+      } else {
+        if (p.backgroundBlurRadii.some((n) => typeof n !== 'number' || n < 0)) {
+          errors.push(`${key}.backgroundBlurRadii: must contain non-negative numbers`);
+        }
+        
+        // Check length matches options if options exist
+        if (Array.isArray(p.options) && p.options.length !== p.backgroundBlurRadii.length) {
+          errors.push(`${key}: backgroundBlurRadii length (${p.backgroundBlurRadii.length}) must match options length (${p.options.length})`);
+        }
+      }
+    }
+  }
+  
   return errors;
 }
 
