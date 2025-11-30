@@ -8,5 +8,6 @@
   "allowResize": true,
   "keepAspectRatio": false,
   "allowLockScreen": true,
-  "requireSignedIn": false
+  "allowInternet": false,
+  "backgroundBlurRadius": 30
 }
