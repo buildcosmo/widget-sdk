@@ -3,16 +3,9 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './style.css'
 
-const preferences = {
-  "theme": "Default",
-  "hideBackground": false
-};
-
-const widgetData = {};
-
 let root = null;
 
-function widget(prefs, data) {
+function widget(preferences, widgetData) {
   const container = document.getElementById('widget-root') || createRootElement();
   
   if (!root) {
@@ -21,7 +14,7 @@ function widget(prefs, data) {
 
   root.render(
     <StrictMode>
-      <App preferences={prefs} widgetData={data} />
+      <App preferences={preferences} widgetData={widgetData} />
     </StrictMode>
   );
 }
@@ -35,6 +28,10 @@ function createRootElement() {
 
 window.widget = widget;
 
+// In dev mode, simulate first load (widgetData is undefined)
 if (import.meta.env.DEV && !window.webkit) {
-  widget(preferences, widgetData);
+  widget({
+    "theme": "Default",
+    "hideBackground": false
+  });
 }

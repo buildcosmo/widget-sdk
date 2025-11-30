@@ -45,4 +45,3 @@ function ensureRoot() {
   }
   return el;
 }
-

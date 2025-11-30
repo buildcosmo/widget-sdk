@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 interface WidgetProps {
   preferences: Record<string, any>;
-  widgetData: string | Record<string, any>;
+  widgetData?: Record<string, any>;  // undefined on first load, object after saving
 }
 
 export default function Widget({ preferences, widgetData }: WidgetProps) {

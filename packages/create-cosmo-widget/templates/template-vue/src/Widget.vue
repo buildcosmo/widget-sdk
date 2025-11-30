@@ -7,8 +7,8 @@ const props = defineProps({
     required: true
   },
   widgetData: {
-    type: [Object, String],
-    default: null
+    type: Object,
+    default: undefined
   }
 })
 

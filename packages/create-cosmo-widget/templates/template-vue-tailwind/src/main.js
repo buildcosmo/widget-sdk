@@ -12,8 +12,8 @@ function widget(preferences, widgetData) {
     }
 
     appInstance = createApp(App, {
-        preferences: preferences || {},
-        widgetData: widgetData || null
+        preferences,
+        widgetData
     });
 
     appInstance.mount(container);
@@ -28,9 +28,10 @@ function createRootElement() {
 
 window.widget = widget;
 
+// In dev mode, simulate first load (widgetData is undefined)
 if (import.meta.env.DEV && !window.webkit) {
     widget({
         "theme": "Default",
         "hideBackground": false
-    }, {});
+    });
 }

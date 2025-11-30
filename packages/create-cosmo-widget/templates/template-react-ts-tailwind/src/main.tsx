@@ -1,22 +1,11 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, Root } from 'react-dom/client'
 import Widget from './Widget.tsx'
 import './style.css'
 
-
-
-const preferences: Record<string, any> = {
-  "theme": "Default",
-  "hideBackground": false
-};
-
-const widgetData: string | Record<string, any> = "";
-
-import { Root } from 'react-dom/client';
-
 let root: Root | null = null;
 
-function widget(prefs: Record<string, any>, data: string | Record<string, any>): void {
+function widget(preferences: Record<string, any>, widgetData?: Record<string, any>): void {
   const container = document.getElementById('widget-root') || createRootElement();
   
   if (!root) {
@@ -25,7 +14,7 @@ function widget(prefs: Record<string, any>, data: string | Record<string, any>):
 
   root.render(
     <StrictMode>
-      <Widget preferences={prefs} widgetData={data} />
+      <Widget preferences={preferences} widgetData={widgetData} />
     </StrictMode>
   );
 }
@@ -41,10 +30,14 @@ window.widget = widget;
 
 declare global {
   interface Window {
-    widget: (prefs: Record<string, any>, data: string | Record<string, any>) => void;
+    widget: (preferences: Record<string, any>, widgetData?: Record<string, any>) => void;
   }
 }
 
+// In dev mode, simulate first load (widgetData is undefined)
 if (import.meta.env.DEV && !window.webkit) {
-  widget(preferences, widgetData);
+  widget({
+    "theme": "Default",
+    "hideBackground": false
+  });
 }

@@ -3,7 +3,7 @@ import { watch, onMounted } from 'vue'
 
 const props = defineProps<{
   preferences: Record<string, any>;
-  widgetData?: Record<string, any>;
+  widgetData?: Record<string, any>;  // undefined on first load, object after saving
 }>()
 
 function updateBackgroundClass() {
