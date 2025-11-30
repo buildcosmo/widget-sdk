@@ -2,12 +2,6 @@ import { createApp } from 'vue'
 import './style.css'
 import Widget from './Widget.vue'
 
-declare global {
-  interface Window {
-    widget: (config: Record<string, any>, root: string | HTMLElement) => void;
-  }
-}
-
 window.widget = (config: Record<string, any>, root: string | HTMLElement) => {
   const app = createApp(Widget, {
     preferences: config.styles || {}
@@ -21,6 +15,12 @@ window.widget = (config: Record<string, any>, root: string | HTMLElement) => {
     } else {
         console.error('Widget root element not found')
     }
+}
+
+declare global {
+  interface Window {
+    widget: (config: Record<string, any>, root: string | HTMLElement) => void;
+  }
 }
 
 if (import.meta.env.DEV && !(window as any).webkit) {

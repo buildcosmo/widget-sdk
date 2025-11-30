@@ -36,13 +36,13 @@ function createRootElement(): HTMLElement {
   return el;
 }
 
+window.widget = widget;
+
 declare global {
   interface Window {
-    widget: typeof widget;
+    widget: (prefs: Record<string, any>, data: Record<string, any>) => void;
   }
 }
-
-window.widget = widget;
 
 if (import.meta.env.DEV && !window.webkit) {
   widget(preferences, widgetData);
