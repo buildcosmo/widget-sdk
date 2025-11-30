@@ -1,9 +1,30 @@
 <script setup>
-defineProps({
+import { watch, onMounted } from 'vue'
+
+const props = defineProps({
   preferences: {
     type: Object,
     required: true
   }
+})
+
+function updateBackgroundClass() {
+  const root = document.getElementById('widget-root');
+  if (root) {
+    if (props.preferences?.hideBackground) {
+      root.classList.add('hide-background');
+    } else {
+      root.classList.remove('hide-background');
+    }
+  }
+}
+
+onMounted(() => {
+  updateBackgroundClass();
+})
+
+watch(() => props.preferences?.hideBackground, () => {
+  updateBackgroundClass();
 })
 </script>
 

@@ -1,9 +1,22 @@
+import { useEffect } from 'react'
+
 interface WidgetProps {
   preferences: Record<string, any>;
   widgetData: Record<string, any>;
 }
 
 export default function Widget({ preferences, widgetData }: WidgetProps) {
+  useEffect(() => {
+    const root = document.getElementById('widget-root');
+    if (root) {
+      if (preferences?.hideBackground) {
+        root.classList.add('hide-background');
+      } else {
+        root.classList.remove('hide-background');
+      }
+    }
+  }, [preferences?.hideBackground]);
+
   return (
     <div>
       <div className="header"></div>

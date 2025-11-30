@@ -6,15 +6,15 @@ let appInstance = null;
 
 function widget(preferences, widgetData) {
     const container = document.getElementById('widget-root') || createRootElement();
-    
+
     if (appInstance) {
         appInstance.unmount();
     }
-    
+
     appInstance = createApp(App, {
         preferences: preferences || {}
     });
-    
+
     appInstance.mount(container);
 }
 

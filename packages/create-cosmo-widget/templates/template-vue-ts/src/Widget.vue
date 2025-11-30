@@ -1,8 +1,29 @@
 <script setup lang="ts">
-defineProps<{
+import { watch, onMounted } from 'vue'
+
+const props = defineProps<{
   preferences: Record<string, any>;
   widgetData?: Record<string, any>;
 }>()
+
+function updateBackgroundClass() {
+  const root = document.getElementById('widget-root');
+  if (root) {
+    if (props.preferences?.hideBackground) {
+      root.classList.add('hide-background');
+    } else {
+      root.classList.remove('hide-background');
+    }
+  }
+}
+
+onMounted(() => {
+  updateBackgroundClass();
+})
+
+watch(() => props.preferences?.hideBackground, () => {
+  updateBackgroundClass();
+})
 </script>
 
 <template>

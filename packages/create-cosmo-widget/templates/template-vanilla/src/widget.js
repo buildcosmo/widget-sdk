@@ -4,6 +4,13 @@ export default function widget(preferences, widgetData) {
   const root = ensureRoot();
   root.innerHTML = '';
 
+  // Handle hideBackground preference
+  if (preferences?.hideBackground) {
+    root.classList.add('hide-background');
+  } else {
+    root.classList.remove('hide-background');
+  }
+
   const header = document.createElement('div');
   header.className = 'header';
 
