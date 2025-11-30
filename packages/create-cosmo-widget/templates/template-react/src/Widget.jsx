@@ -16,7 +16,10 @@ export default function Widget({ preferences, widgetData }) {
     <div>
       <div className="header"></div>
       <div className="content">
-        Your widget content goes here.
+        <h2>Preferences</h2>
+        <pre>{JSON.stringify(preferences, null, 2)}</pre>
+        <h2>Widget Data</h2>
+        <pre>{JSON.stringify(widgetData, null, 2)}</pre>
       </div>
     </div>
   )

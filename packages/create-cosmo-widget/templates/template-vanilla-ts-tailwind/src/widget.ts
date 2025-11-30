@@ -26,7 +26,21 @@ export default function widget(preferences: WidgetPreferences, widgetData: strin
 
   const content = document.createElement('div');
   content.className = 'content';
-  content.textContent = 'Your widget content goes here.';
+  
+  const prefsTitle = document.createElement('h2');
+  prefsTitle.textContent = 'Preferences';
+  const prefsPre = document.createElement('pre');
+  prefsPre.textContent = JSON.stringify(preferences, null, 2);
+  
+  const dataTitle = document.createElement('h2');
+  dataTitle.textContent = 'Widget Data';
+  const dataPre = document.createElement('pre');
+  dataPre.textContent = JSON.stringify(widgetData, null, 2);
+  
+  content.appendChild(prefsTitle);
+  content.appendChild(prefsPre);
+  content.appendChild(dataTitle);
+  content.appendChild(dataPre);
 
   root.appendChild(header);
   root.appendChild(content);

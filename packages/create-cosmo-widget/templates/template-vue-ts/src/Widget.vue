@@ -28,27 +28,39 @@ watch(() => props.preferences?.hideBackground, () => {
 
 <template>
   <div class="widget">
-    <h1>Hello from Vue!</h1>
-    <p>Edit <code>src/Widget.vue</code> to get started.</p>
-    <div class="preferences">
+    <div class="header"></div>
+    <div class="content">
       <h2>Preferences</h2>
       <pre>{{ JSON.stringify(preferences, null, 2) }}</pre>
+      <h2>Widget Data</h2>
+      <pre>{{ JSON.stringify(widgetData, null, 2) }}</pre>
     </div>
   </div>
 </template>
 
 <style scoped>
 .widget {
-  font-family: sans-serif;
-  text-align: center;
-  padding: 2rem;
+  width: 100%;
+  height: 100%;
 }
 
-.preferences {
-  margin-top: 2rem;
-  text-align: left;
+.header {
+  width: 100%;
+  height: 20px;
+}
+
+.content {
+  width: 100%;
+  height: calc(100% - 20px);
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+pre {
   background: #f5f5f5;
   padding: 1rem;
   border-radius: 8px;
+  overflow: auto;
+  font-size: 12px;
 }
 </style>
