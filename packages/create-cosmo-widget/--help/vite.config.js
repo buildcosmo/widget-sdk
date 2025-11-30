@@ -113,15 +113,15 @@ function validateWidgetConfig(cfg) {
 
 function validatePreferencesTemplate(prefs) {
   const errors = [];
-  
+
   for (const [key, pref] of Object.entries(prefs)) {
     if (typeof pref !== 'object' || pref === null) {
       errors.push(`${key}: must be an object`);
       continue;
     }
-    
+
     const p = pref;
-    
+
     // Validate backgroundBlurRadii
     if ('backgroundBlurRadii' in p) {
       if (!Array.isArray(p.backgroundBlurRadii)) {
@@ -130,7 +130,7 @@ function validatePreferencesTemplate(prefs) {
         if (p.backgroundBlurRadii.some((n) => typeof n !== 'number' || n < 0)) {
           errors.push(`${key}.backgroundBlurRadii: must contain non-negative numbers`);
         }
-        
+
         // Check length matches options if options exist
         if (Array.isArray(p.options) && p.options.length !== p.backgroundBlurRadii.length) {
           errors.push(`${key}: backgroundBlurRadii length (${p.backgroundBlurRadii.length}) must match options length (${p.options.length})`);
@@ -138,7 +138,7 @@ function validatePreferencesTemplate(prefs) {
       }
     }
   }
-  
+
   return errors;
 }
 
