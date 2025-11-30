@@ -10,7 +10,15 @@ declare global {
   }
 }
 
-function widget(preferences: Record<string, any>, widgetData: string | Record<string, any>): void {
+function createRootElement(): HTMLElement {
+  const el = document.createElement('div');
+  el.id = 'widget-root';
+  document.body.appendChild(el);
+  return el;
+}
+
+// Assign to window immediately as function expression to ensure it's available synchronously
+window.widget = function widget(preferences: Record<string, any>, widgetData: string | Record<string, any>): void {
   const container = document.getElementById('widget-root') || createRootElement();
   
   if (appInstance) {
@@ -23,17 +31,7 @@ function widget(preferences: Record<string, any>, widgetData: string | Record<st
   });
   
   appInstance.mount(container);
-}
-
-function createRootElement(): HTMLElement {
-  const el = document.createElement('div');
-  el.id = 'widget-root';
-  document.body.appendChild(el);
-  return el;
-}
-
-// Assign to window immediately to ensure it's available when native app calls it
-window.widget = widget;
+};
 
 if (import.meta.env.DEV && !(window as any).webkit) {
   widget({
