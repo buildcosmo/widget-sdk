@@ -21,9 +21,9 @@ export default function Widget({ preferences, widgetData }: WidgetProps) {
     <div>
       <div className="header"></div>
       <div className="content">
-        <h2>Preferences</h2>
+        <div className="label">preferences:</div>
         <pre>{JSON.stringify(preferences, null, 2)}</pre>
-        <h2>Widget Data</h2>
+        <div className="label">widgetData:</div>
         <pre>{JSON.stringify(widgetData, null, 2)}</pre>
       </div>
     </div>

@@ -30,9 +30,9 @@ watch(() => props.preferences?.hideBackground, () => {
   <div class="widget">
     <div class="header"></div>
     <div class="content">
-      <h2>Preferences</h2>
+      <div class="label">preferences:</div>
       <pre>{{ JSON.stringify(preferences, null, 2) }}</pre>
-      <h2>Widget Data</h2>
+      <div class="label">widgetData:</div>
       <pre>{{ JSON.stringify(widgetData, null, 2) }}</pre>
     </div>
   </div>
@@ -56,11 +56,19 @@ watch(() => props.preferences?.hideBackground, () => {
   padding: 1rem;
 }
 
-pre {
-  background: #f5f5f5;
-  padding: 1rem;
-  border-radius: 8px;
-  overflow: auto;
+.label {
   font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.75rem;
+  border-radius: 6px;
+  overflow: auto;
+  font-size: 11px;
+  margin: 0 0 1rem 0;
 }
 </style>
