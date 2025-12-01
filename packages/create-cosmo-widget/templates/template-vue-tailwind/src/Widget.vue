@@ -1,80 +1,28 @@
 <script setup>
-import { watch, onMounted } from 'vue'
+import { watch } from 'vue'
 
 const props = defineProps({
-  preferences: {
-    type: Object,
-    required: true
+  preferences: { type: Object, required: true },
+  widgetData: { type: Object, default: undefined }
+})
+
+watch(
+  () => props.preferences?.hideBackground,
+  (hide) => {
+    document.getElementById('widget-root')?.classList.toggle('hide-background', !!hide)
   },
-  widgetData: {
-    type: Object,
-    default: undefined
-  }
-})
-
-function updateBackgroundClass() {
-  const root = document.getElementById('widget-root');
-  if (root) {
-    if (props.preferences?.hideBackground) {
-      root.classList.add('hide-background');
-    } else {
-      root.classList.remove('hide-background');
-    }
-  }
-}
-
-onMounted(() => {
-  updateBackgroundClass();
-})
-
-watch(() => props.preferences?.hideBackground, () => {
-  updateBackgroundClass();
-})
+  { immediate: true }
+)
 </script>
 
 <template>
-  <div class="widget">
-    <div class="header"></div>
-    <div class="content">
-      <div class="label">preferences:</div>
-      <pre>{{ JSON.stringify(preferences, null, 2) }}</pre>
-      <div class="label">widgetData:</div>
-      <pre>{{ JSON.stringify(widgetData, null, 2) }}</pre>
+  <div class="w-full h-full">
+    <div class="w-full h-5" />
+    <div class="w-full h-[calc(100%-20px)] box-border p-4">
+      <div class="text-xs font-medium mb-1 text-black/60">preferences:</div>
+      <pre class="bg-black/5 p-3 rounded-md overflow-auto text-[11px] mb-4">{{ JSON.stringify(preferences, null, 2) }}</pre>
+      <div class="text-xs font-medium mb-1 text-black/60">widgetData:</div>
+      <pre class="bg-black/5 p-3 rounded-md overflow-auto text-[11px] mb-4">{{ JSON.stringify(widgetData, null, 2) }}</pre>
     </div>
   </div>
 </template>
-
-<style scoped>
-.widget {
-  width: 100%;
-  height: 100%;
-}
-
-.header {
-  width: 100%;
-  height: 20px;
-}
-
-.content {
-  width: 100%;
-  height: calc(100% - 20px);
-  box-sizing: border-box;
-  padding: 1rem;
-}
-
-.label {
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  color: rgba(0, 0, 0, 0.6);
-}
-
-pre {
-  background: rgba(0, 0, 0, 0.05);
-  padding: 0.75rem;
-  border-radius: 6px;
-  overflow: auto;
-  font-size: 11px;
-  margin: 0 0 1rem 0;
-}
-</style>
