@@ -4,38 +4,22 @@ import Widget from './Widget.vue'
 
 let appInstance: VueApp | null = null;
 
-declare global {
-  interface Window {
-    widget: (preferences: Record<string, any>, widgetData?: Record<string, any>) => void;
-  }
-}
-
-function createRootElement(): HTMLElement {
-  const el = document.createElement('div');
-  el.id = 'widget-root';
-  document.body.appendChild(el);
-  return el;
-}
-
-window.widget = function widget(preferences: Record<string, any>, widgetData?: Record<string, any>): void {
-  const container = document.getElementById('widget-root') || createRootElement();
-  
+function widget(preferences: Record<string, any>, widgetData?: Record<string, any>) {
   if (appInstance) {
     appInstance.unmount();
   }
-  
-  appInstance = createApp(Widget, {
-    preferences,
-    widgetData
-  });
-  
-  appInstance.mount(container);
-};
+  appInstance = createApp(Widget, { preferences, widgetData });
+  appInstance.mount('#widget-root');
+}
 
-// In dev mode, simulate first load (widgetData is undefined)
+window.widget = widget;
+
+declare global {
+  interface Window {
+    widget: typeof widget;
+  }
+}
+
 if (import.meta.env.DEV && !(window as any).webkit) {
-  window.widget({
-    "theme": "Default",
-    "hideBackground": false
-  });
+  widget({ theme: 'Default', hideBackground: false });
 }
