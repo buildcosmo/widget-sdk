@@ -5,7 +5,7 @@ body {
 }
 
 #widget-root {
-  @apply fixed w-full h-full font-sans bg-white/10;
+  @apply fixed w-full h-full font-sans bg-white/10 select-none;
 }
 
 #widget-root.hide-background {

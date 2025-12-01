@@ -48,6 +48,7 @@ watch(() => props.preferences?.hideBackground, () => {
 .widget {
   width: 100%;
   height: 100%;
+  user-select: none;
 }
 
 .header {

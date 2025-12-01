@@ -9,6 +9,7 @@ body {
   height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: rgba(255, 255, 255, 0.1);
+  user-select: none;
 }
 
 #widget-root.hide-background {
