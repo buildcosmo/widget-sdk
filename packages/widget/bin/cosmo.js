@@ -7,6 +7,7 @@ import path from 'path';
 import os from 'os';
 import archiver from 'archiver';
 import axios from 'axios';
+import { createServer } from 'http';
 
 const UPLOAD_URL_ENDPOINT = process.env.COSMO_UPLOAD_URL_ENDPOINT || 'https://od8wzcssy7.execute-api.us-west-2.amazonaws.com/Prod/generate-upload-url';
 const AUTH_WEB_URL = process.env.COSMO_AUTH_WEB_URL || 'https://buildcosmo.com/cli-auth';
@@ -67,8 +68,20 @@ program
             console.log('🔐 Requesting upload URL...');
 
             // Get authentication token
-            let token = getToken();
-            if (!token || isTokenExpired(token)) {
+            let token = process.env.COSMO_AUTH_TOKEN || getToken();
+
+            // In CI environments, we should never attempt interactive login
+            const isCI = process.env.CI === 'true' || process.env.CI === '1';
+
+            if (!token || (isTokenExpired(token) && !process.env.COSMO_AUTH_TOKEN)) {
+                if (process.env.COSMO_AUTH_TOKEN) {
+                    throw new Error('COSMO_AUTH_TOKEN is invalid or expired (401)');
+                }
+
+                if (isCI) {
+                    throw new Error('Authentication required. Please set COSMO_AUTH_TOKEN environment variable in CI.');
+                }
+
                 console.log('⚠️  Not authenticated or session expired. Starting login flow...');
                 token = await startAuthFlow();
                 saveToken(token);
@@ -92,6 +105,9 @@ program
                 });
             } catch (error) {
                 if (error.response && error.response.status === 401) {
+                    if (process.env.COSMO_AUTH_TOKEN) {
+                        throw new Error('COSMO_AUTH_TOKEN is invalid or expired (401)');
+                    }
                     console.log('⚠️  Session expired. Re-authenticating...');
                     token = await startAuthFlow();
                     saveToken(token);
