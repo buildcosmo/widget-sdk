@@ -140,6 +140,17 @@ async function main() {
     log('Warning: failed to set project name in package.json');
   }
 
+  // Rename _gitignore to .gitignore
+  const gitignorePath = resolve(targetDir, '_gitignore');
+  if (existsSync(gitignorePath)) {
+    try {
+      const { renameSync } = await import('fs');
+      renameSync(gitignorePath, resolve(targetDir, '.gitignore'));
+    } catch (e) {
+      log('Warning: failed to rename _gitignore to .gitignore');
+    }
+  }
+
   // Install deps (best-effort)
   log('\nInstalling dependencies...');
   const ua = process.env.npm_config_user_agent || '';
