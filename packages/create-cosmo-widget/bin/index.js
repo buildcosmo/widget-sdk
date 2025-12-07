@@ -140,6 +140,18 @@ async function main() {
     log('Warning: failed to set project name in package.json');
   }
 
+  // Patch widget.config.json name
+  const configPath = resolve(targetDir, 'widget.config.json');
+  if (existsSync(configPath)) {
+    try {
+      const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+      config.name = appName; // Use project name as default widget name
+      writeFileSync(configPath, JSON.stringify(config, null, 2));
+    } catch (e) {
+      log('Warning: failed to set widget name in widget.config.json');
+    }
+  }
+
   // Rename _gitignore to .gitignore
   const gitignorePath = resolve(targetDir, '_gitignore');
   if (existsSync(gitignorePath)) {
