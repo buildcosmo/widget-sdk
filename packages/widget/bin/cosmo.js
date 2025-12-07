@@ -7,7 +7,8 @@ import path from 'path';
 import os from 'os';
 import archiver from 'archiver';
 import axios from 'axios';
-import { createServer } from 'http';
+import http from 'http';
+
 
 const UPLOAD_URL_ENDPOINT = process.env.COSMO_UPLOAD_URL_ENDPOINT || 'https://od8wzcssy7.execute-api.us-west-2.amazonaws.com/Prod/generate-upload-url';
 const AUTH_WEB_URL = process.env.COSMO_AUTH_WEB_URL || 'https://buildcosmo.com/cli-auth';
@@ -215,7 +216,7 @@ function createZip(sourceDir, outputPath) {
  */
 function startAuthFlow() {
     return new Promise((resolve, reject) => {
-        const server = createServer((req, res) => {
+        const server = http.createServer((req, res) => {
             const url = new URL(req.url, `http://localhost:${CALLBACK_PORT}`);
             const token = url.searchParams.get('token');
 
