@@ -1,6 +1,6 @@
 # My Cosmo Widget
 
-Change this file to add a description for your widget. This description will be shown in the Cosmo widget store.
+Change this file to add a description for your widget. This description will be shown in the marketplace.
 
 ## Features
 
