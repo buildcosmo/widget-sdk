@@ -106,6 +106,18 @@ async function main() {
     template = await promptTemplate();
   }
 
+  // Prompt for Widget Display Name
+  const rlName = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  let widgetDisplayName;
+  try {
+    widgetDisplayName = await ask(rlName, '\nWidget Display Name (default: Cosmo Widget): ', 'Cosmo Widget');
+  } finally {
+    rlName.close();
+  }
+
   // Validate template
   const validTemplates = [
     'vanilla', 'vanilla-ts',
@@ -145,7 +157,7 @@ async function main() {
   if (existsSync(configPath)) {
     try {
       const config = JSON.parse(readFileSync(configPath, 'utf-8'));
-      config.name = appName; // Use project name as default widget name
+      config.name = widgetDisplayName; // Use user-provided display name
       writeFileSync(configPath, JSON.stringify(config, null, 2));
     } catch (e) {
       log('Warning: failed to set widget name in widget.config.json');
