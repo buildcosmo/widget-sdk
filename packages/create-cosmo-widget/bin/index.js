@@ -84,7 +84,7 @@ async function main() {
       output: process.stdout
     });
     try {
-      rawTarget = await ask(rl, '\nProject name (default: cosmo-widget): ', 'cosmo-widget');
+      rawTarget = await ask(rl, '\nProject name (default: my-widget): ', 'my-widget');
     } finally {
       rl.close();
     }
@@ -108,7 +108,7 @@ async function main() {
   });
   let widgetDisplayName;
   try {
-    widgetDisplayName = await ask(rlName, '\nWidget Display Name (default: Cosmo Widget): ', 'Cosmo Widget');
+    widgetDisplayName = await ask(rlName, '\nWidget Display Name (default: My Widget): ', 'My Widget');
   } finally {
     rlName.close();
   }
