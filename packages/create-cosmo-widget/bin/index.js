@@ -101,11 +101,6 @@ async function main() {
     mkdirSync(targetDir, { recursive: true });
   }
 
-  // Prompt for template if not provided
-  if (!template) {
-    template = await promptTemplate();
-  }
-
   // Prompt for Widget Display Name
   const rlName = readline.createInterface({
     input: process.stdin,
@@ -116,6 +111,11 @@ async function main() {
     widgetDisplayName = await ask(rlName, '\nWidget Display Name (default: Cosmo Widget): ', 'Cosmo Widget');
   } finally {
     rlName.close();
+  }
+
+  // Prompt for template if not provided
+  if (!template) {
+    template = await promptTemplate();
   }
 
   // Validate template
